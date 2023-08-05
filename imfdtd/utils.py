@@ -94,8 +94,11 @@ def get_func_gij(
             if G[i,j].is_constant():
                 constant_index.append([i, j])
     
-    _g_ij = sp.lambdify(variables, G, modules=modules) # Numpy based calculation module 
-
+    _g_ij = sp.lambdify(variables, G.tolist(), modules=modules) # Numpy based calculation module 
+    
+    # Sympy currently has an error about sympy.Matrix inside equations and numpy.ndarray conversion.
+    # using multi-dim listed equations instead of the sympy.Matrix.
+    
     def func_g_ij(*args):
         data_shape = args[0].shape
         dim = len(data_shape)
@@ -103,7 +106,7 @@ def get_func_gij(
         result_arr = _g_ij(*args)
         # Fixing ragged nested elements
         for (i, j) in constant_index:
-            result_arr[i, j] = result_arr[i, j]*ones # constant * ndarray
+            result_arr[i][j] = result_arr[i][j]*ones # constant * ndarray
         # dtype=objet -> dtype=float
         g_r_arr =[]
         for g in result_arr:
@@ -174,7 +177,19 @@ def prepare_simulation(
 
     return (E_points, H_points), (E_field, H_field), (g_tensor_e, g_tensor_h)
 
+# Matrix multiplication
+def mv_mul(
+        matrix_arr:np.ndarray, 
+        vector_arr:np.ndarray):
+    # Ensure that the shapes of the input arrays are compatible
+    assert matrix_arr.shape[:2] == vector_arr.shape[:2], "Shapes of matrix and vector arrays must be the same (N, M)."
+    assert matrix_arr.shape[-2:] == (3, 3), "Matrix array must have shape (N, M, 3, 3)."
+    assert vector_arr.shape[-1] == 3, "Vector array must have shape (N, M, 3)."
 
+    # Perform element-wise matrix-vector multiplication
+    result = np.einsum('ijkl,ijl->ijk', matrix_arr, vector_arr)
+
+    return result
 #---------------------------
 """
 r_c, phi_c, z_c = cylin_s
