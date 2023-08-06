@@ -190,25 +190,11 @@ def mv_mul(
     result = np.einsum('ijkl,ijl->ijk', matrix_arr, vector_arr)
 
     return result
-#---------------------------
-"""
-r_c, phi_c, z_c = cylin_s
 
-R1, R2 = sp.symbols("R_1 R_2", positive=True, real=True)
-
-u1 = R1 + ((R2- R1)/R1)*r_c
-u2 = phi_c
-u3 = z_c
-
-
-cy_xyz = get_jacobian(cylin_s, basic_coord_transform_eqs(cylin_s, "cylinder", "xyz"))
-A = get_jacobian([r_c, phi_c, z_c], [u1, u2, u3])
-Ja = (A@cy_xyz)
-M = sp.simplify(Ja@Ja.T)/sp.simplify(Ja.det())
-
-r1 = 2E-2
-r2 = 4E-2
-
-M_cal = M.subs([(R1, r1), (R2, r2)])
-M_xyz = sp.simplify(represent_with_basic_coord(M_cal, cylin_s, xyz_s, coord_basic="cylinder", coord_rep="xyz"))
-"""
+def curl_E(E_field):
+    curl_E = np.zeros(E_field.shape)
+    
+    
+    return 
+def curl_H(H_field):
+    return    
