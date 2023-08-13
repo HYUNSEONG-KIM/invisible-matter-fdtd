@@ -17,7 +17,7 @@ class GeoObject:
             self.outter_path  = out_path
         else:
             raise ValueError("`out_path` must be matplotlib Path object, and must be closed path.")
-        
+
         self.inner_hollow = []
         if inner_hollow is not None and len(inner_hollow) !=0:
             self.add_hollows(inner_hollow)
@@ -32,7 +32,7 @@ class GeoObject:
             if isinstance(h, PathPatch):
                 self.inner_hollow.append(h)
         return 0
-    def del_holow(self, index=None):
+    def del_hollow(self, index=None):
         index_len = len(self.inner_hollow)
         if index is None:
             del(self.inner_hollow[-1])
@@ -65,11 +65,11 @@ class GeoObject:
         
         points = np.vstack([mesh_grid[0].ravel(), mesh_grid[1].ravel()]).T
         
-        p_index_prime = self.outter_path_poly.contains_points(points)
+        p_index_prime = PathPatch(self.outter_path).contains_points(points)
         p_index_inners =[]
         
         for hollow in self.inner_hollow:
-            p_index_inners.appned(hollow.contains_points(points))
+            p_index_inners.append(hollow.contains_points(points))
         
         # Union the inner index
         p_index_inner = p_index_inners[0]

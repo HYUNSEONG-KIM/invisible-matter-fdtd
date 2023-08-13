@@ -10,7 +10,7 @@ class FDTD:
     def __init__(self, dim, lattice, mode="2d"):
         assert len(dim) == len(lattice), "The given dimension and lattice number must be same."
         
-        self.dim = dim
+        self.dim = dim # [[xi, xf], [yi, yf]]
         self.lattice_dim = lattice
         self.mode = "2d"
         
@@ -53,10 +53,14 @@ class FDTD:
         dx = xline[1]-xline[0]
         dy = yline[1]-yline[0]
         # Magnetic field grid
-        xline_m = np.linspace(xi+dx/2, xf+dx/2, nx, endpoint=True)
-        yline_m = np.linspace(yi+dy/2, yf+dy/2, ny, endpoint=True)
+        xline_m1 = np.linspace(xi-dx/2, xf+dx/2, nx+1, endpoint=True)
+        yline_m1 = np.linspace(yi-dy/2, yf+dy/2, ny+1, endpoint=True)
 
-        return (np.meshgrid(xline, yline), np.meshgrid(xline_m, yline_m))
+        Epoints = (np.meshgrid(xline, yline))
+        Hxpoints = (np.meshgrid(xline, yline_m1))
+        Hypoints = (np.meshgrid(xline_m1, yline))
+
+        return Epoints, Hxpoints, Hypoints
 
     
     def prepare_system(self, save_path:str=None):
@@ -120,6 +124,7 @@ class FDTD:
         n = int(T/self.dt)
         
         for i in range(0, n):
+            pass
             
         
         

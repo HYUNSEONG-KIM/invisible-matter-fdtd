@@ -192,9 +192,30 @@ def mv_mul(
     return result
 
 def curl_E(E_field):
-    curl_E = np.zeros(E_field.shape)
+    curl = np.zeros(E_field.shape, E_field.dtype)
+
+    ### General 3D cases
+    ## curl_E(x)
+    #curl_E[, 0] += (E_field[2] - E_field[2]) # dEz/y
+    #curl_E[, 0] -= (E_field[1] - E_field[1]) # dEy/z
+
+    ## curl_E(y)
+    #curl_E[, 1] += (E_field[0] - E_field[0]) # dEx/z
+    #curl_E[, 1] -= (E_field[2] - E_field[2]) # dEz/x
+
+    ## curl_E(z)
+    #curl_E[, 2] += (E_field[1] - E_field[1]) # dEy/x
+    #curl_E[, 2] -= (E_field[0] - E_field[0]) # dEx/y
+
+    # We only consider 2D TM mode wave
+    curl[:-1, :, 0] += E_field[1:, : , 2] - E_field[:-1, :, 2] # dEz/dy
+    curl[:, :-1, 1] -= E_field[:, 1: , 2] - E_field[:, :-1, 2] # dEz/dx
+
+    return curl
     
-    
-    return 
 def curl_H(H_field):
-    return    
+    curl = np.zeros(H_field.shape, dtype=H_field.dtype)
+
+    curl[:,:-1, 2] += H_field[:,1:, 1] - H_field[:,:-1, 1]
+    curl[:-1,:, 2] -= H_field[1:, :, 0] - H_field[:-1,:, 0]
+    return curl
