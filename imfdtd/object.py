@@ -85,7 +85,10 @@ class GeoObject:
             
 class Source(GeoObject):
     def __init__(self, *args, **kwargs):
-        super.__init__(*args, **kwargs)     
+        super.__init__(*args, **kwargs)
+    
+    def source_update(self):
+        raise NotImplementedError("")
 
 class Matter(GeoObject):
     def __init__(

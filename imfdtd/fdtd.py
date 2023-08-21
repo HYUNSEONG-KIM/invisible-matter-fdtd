@@ -28,6 +28,7 @@ class FDTD:
             for obj in objs:
                 if isinstance(obj, Matter):
                     self.matter_objs.append(obj)
+        self.run_state=False
     def add_source(self, srcs:Union[list, Source]):
         if isinstance(srcs, Matter):
             self.matter_objs.append(srcs)
@@ -35,8 +36,10 @@ class FDTD:
             for src in srcs:
                 if isinstance(src, Matter):
                     self.matter_srcs.append(src)
+        self.run_state=False
     def add_boundary(self, bd):
         self.boundary = bd
+        self.run_state=False
     @staticmethod
     def generate_yee_grid(dim, lattice, mode="2d"):
         xdim = dim[0]
@@ -121,6 +124,9 @@ class FDTD:
             "PML": []
         }
     def run_simulation(self, T):
+        if self.run_state is False:
+            return False
+        
         n = int(T/self.dt)
         
         for i in range(0, n):
