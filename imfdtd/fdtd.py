@@ -2,7 +2,7 @@ from typing import Union, Iterable
 
 import numpy as np
 
-from .utils import mv_mul, curl_E, curl_H
+from .utils import mv_mul, curlE, curlH
 from .object import Matter, Source
 from .consts import c0, mu0, ep0
 
